@@ -50,7 +50,7 @@ data_loader = DataLoader(
    #%%
 """Model""" 
 class CNN(nn.Module):
-    def __init__(self): # 모델의 구조를 정의 초기함수 중요!!
+    def __init__(self): 
         super(CNN, self).__init__()
         # self.keep_prob = 0.5
         self.layer1 = torch.nn.Sequential(
@@ -68,21 +68,21 @@ class CNN(nn.Module):
             torch.nn.ReLU(),
             torch.nn.MaxPool2d(kernel_size=2, stride=2, padding=1))
 
-        self.fc1 = torch.nn.Linear(4 * 4 * 128, 625, bias=True)
+        self.fc1 = torch.nn.Linear(4 * 4 * 128, 625, bias=True) # 4x4x128 inputs -> 625 outputs
         torch.nn.init.xavier_uniform_(self.fc1.weight)
         self.layer4 = torch.nn.Sequential(
             self.fc1,
             torch.nn.ReLU(),
             torch.nn.Dropout(p=0.5))
 
-        self.fc2 = torch.nn.Linear(625, 10, bias=True)
+        self.fc2 = torch.nn.Linear(625, 10, bias=True) # 625 inputs -> 10 outputs
         torch.nn.init.xavier_uniform_(self.fc2.weight) 
 
-    def forward(self, x): # 실제 연산. 우리가 직접 실행하는 것이 아니라 모델 인스턴스 인자로 넣어주면 자동으로 작동한다
+    def forward(self, x):
         out = self.layer1(x)
         out = self.layer2(out)
         out = self.layer3(out)
-        out = out.view(out.size(0), -1)   
+        out = out.view(out.size(0), -1) # Flatten
         out = self.layer4(out)
         out = self.fc2(out)
         return out
